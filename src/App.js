@@ -6,17 +6,20 @@
 
 // State hook u import edin
 import React from 'react';
-
-// Gönderiler (çoğul!) ve AramaÇubuğu bileşenlerini import edin, çünkü bunlar App bileşeni içinde kullanılacak
-// sahteVeri'yi import edin
+import { useState } from 'react';
+import Gönderiler from './bileşenler/Gönderiler/Gönderiler'; 
+import AramaÇubuğu from './bileşenler/AramaÇubuğu/AramaÇubuğu'; // Gönderiler (çoğul!) ve AramaÇubuğu bileşenlerini import edin, çünkü bunlar App bileşeni içinde kullanılacak
+import  sahteVeri  from './sahte-veri' // sahteVeri'yi import edin
 import './App.css';
 
 const App = () => {
-  // Gönderi nesneleri dizisini tutmak için "gonderiler" adlı bir state oluşturun, **sahteVeri'yi yükleyin**.
+  const [gonderiler, setGonderiler]=useState(sahteVeri)// Gönderi nesneleri dizisini tutmak için "gonderiler" adlı bir state oluşturun, **sahteVeri'yi yükleyin**.
   // Artık sahteVeri'ye ihtiyacınız olmayacak.
-  // Arama çubuğunun çalışması için , arama kriterini tutacak başka bir state'e ihtiyacımız olacak.
+  const [arama, setArama]=useState(null);// Arama çubuğunun çalışması için , arama kriterini tutacak başka bir state'e ihtiyacımız olacak.
 	
   const gonderiyiBegen = gonderiID => {
+    
+    
     /*
       Bu fonksiyon, belirli bir id ile gönderinin beğeni sayısını bir artırma amacına hizmet eder.
 
@@ -28,11 +31,20 @@ const App = () => {
         - gönderinin idsi "gonderiID" ile eşleşirse, istenen değerlerle yeni bir gönderi nesnesi döndürün.
         - aksi takdirde, sadece gönderi nesnesini değiştirmeden döndürün.
      */
+    gonderiler.find((e)=>e.id==gonderiID).likes+=1;
+    setGonderiler([...sahteVeri]);
   };
+
+    const aramaYap=(e)=>{
+      setArama(e)
+      setGonderiler(sahteVeri.filter(item=>item.username.includes(e)))
+    };
 
   return (
     <div className='App'>
-      {/* AramaÇubuğu ve Gönderiler'i render etmesi için buraya ekleyin */}
+      <AramaÇubuğu search={arama} aramaYap={aramaYap}/>
+      <Gönderiler gonderiler={gonderiler} gonderiyiBegen={gonderiyiBegen}/>
+       {/* AramaÇubuğu ve Gönderiler'i render etmesi için buraya ekleyin */}
       {/* Her bileşenin hangi proplara ihtiyaç duyduğunu kontrol edin, eğer ihtiyaç varsa ekleyin! */}
     </div>
   );
